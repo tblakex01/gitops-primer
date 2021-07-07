@@ -117,4 +117,4 @@ kubectl create ns ${NAMESPACE}
 kubectl create -f /repo/${NAMESPACE}/argo/argo-deployment.yaml -n ${NAMESPACE}
 kubectl create -f /repo/${NAMESPACE}/argo/argo-application.yaml-n ${NAMESPACE}
 kubectl create -f /repo/${NAMESPACE}/Secret_${NAMESPACE}_secret_key.yaml -n ${NAMESPACE}
-kubectl patch -n ${NAMESPACE} configmap argocd-cm -p '{"data":{"repositories":"- name: repo\n  sshPrivateKeySecret:\n    key: id_rsa\n    name: secret-key\n  type: git\n  url: git@github.com:cooktheryan/primer-poc.git\n"'
+kubectl patch -n ${NAMESPACE} configmap argocd-cm -p '{"data":{"repositories":"- name: repo\n  sshPrivateKeySecret:\n    key: id_rsa\n    name: secret-key\n  type: git\n  url: git@github.com:cooktheryan/primer-poc.git\n"}}'
