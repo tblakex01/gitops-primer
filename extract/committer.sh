@@ -71,12 +71,50 @@ users:
 
 export KUBECONFIG=/tmp/kubeconfig
 crane export --export-dir /tmp/export
-crane transform --export-dir /tmp/export --plugin-dir /opt --transform-dir /tmp/transform
-crane apply --export-dir /tmp/export --transform-dir /tmp/transform --output-dir /tmp/outputs 
-rm -rf /repo/${NAMESPACE}
-cp -rp /tmp/outputs/resources/${NAMESPACE} /repo
+crane transform --export-dir /tmp/export/resources --plugin-dir /opt --transform-dir /tmp/transform
+crane apply --export-dir /tmp/export/resources --transform-dir /tmp/transform --output-dir /repo
+
+mkdir /repo/${NAMESPACE}/argo/
+
+echo "
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: application
+  namespace: ${NAMESPACE}
+spec:
+  destination:
+    namespace: ${NAMESPACE}
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: ${NAMESPACE}
+    repoURL: git@github.com:cooktheryan/primer-poc.git
+    targetRevision: ${BRANCH}
+  syncPolicy:
+    automated: {}
+" > /repo/${NAMESPACE}/argo/argo-application.yaml
+
+echo "
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: argocd
+  nameserver: ${NAMESPACE}
+spec:
+  server:
+    route:
+      enabled: true
+" > /repo/${NAMESPACE}/argo/argo-deployment.yaml
 
 git add *
 git commit -am 'bot commit'
 git push origin ${BRANCH} -q
 echo "Merge to ${BRANCH} completed successfully"
+
+export KUBECONFIG=/kubeconfig/config
+kubectl create ns ${NAMESPACE}
+kubectl create -f /repo/${NAMESPACE}/argo/argo-deployment.yaml -n ${NAMESPACE}
+kubectl create -f /repo/${NAMESPACE}/argo/argo-application.yaml-n ${NAMESPACE}
+kubectl create -f /repo/${NAMESPACE}/Secret_${NAMESPACE}_secret_key.yaml -n ${NAMESPACE}
+kubectl patch -n ${NAMESPACE} configmap argocd-cm -p '{"data":{"repositories":"- name: repo\n  sshPrivateKeySecret:\n    key: id_rsa\n    name: secret-key\n  type: git\n  url: git@github.com:cooktheryan/primer-poc.git\n"'
