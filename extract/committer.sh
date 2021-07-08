@@ -34,8 +34,10 @@ git fetch -q
 existed_in_remote=$(git ls-remote --heads origin ${BRANCH})
 if [[ -z ${existed_in_remote} ]]; then
    git checkout -b ${BRANCH}
+   rm -rf ./*
 else  
    git checkout ${BRANCH}
+   rm -rf ./*
 fi
 git config --global user.email "${EMAIL}"
 
