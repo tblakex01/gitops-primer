@@ -114,7 +114,8 @@ echo "Merge to ${BRANCH} completed successfully"
 
 export KUBECONFIG=/kubeconfig/config
 kubectl create ns ${NAMESPACE}
-kubectl create -f /repo/${NAMESPACE}/argo/argo-deployment.yaml -n ${NAMESPACE}
-kubectl create -f /repo/${NAMESPACE}/argo/argo-application.yaml-n ${NAMESPACE}
-kubectl create -f /repo/${NAMESPACE}/Secret_${NAMESPACE}_secret_key.yaml -n ${NAMESPACE}
+kubectl create -f /repo/${NAMESPACE}/argo/argo-deployment.yaml
+kubectl create -f /repo/${NAMESPACE}/argo/argo-application.yaml
+kubectl create -f /repo/${NAMESPACE}/Secret_${NAMESPACE}_secret-key.yaml
+sleep 30
 kubectl patch -n ${NAMESPACE} configmap argocd-cm -p '{"data":{"repositories":"- name: repo\n  sshPrivateKeySecret:\n    key: id_rsa\n    name: secret-key\n  type: git\n  url: git@github.com:cooktheryan/primer-poc.git\n"}}'
