@@ -135,13 +135,13 @@ jobs:
         run: mkdir export/transform-plugins
 
       - name: Load binary artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: plugins
           path: export/transform-plugins/
 
       - name: Load crane artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: crane
           path: export/
@@ -206,7 +206,7 @@ jobs:
 
     steps:
       - name: Load container artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: primer-operator
           path: /tmp
@@ -246,7 +246,7 @@ jobs:
 
     steps:
       - name: Load container artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: export-image
           path: /tmp
@@ -286,7 +286,7 @@ jobs:
 
     steps:
       - name: Load container artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: primer-bundle
           path: /tmp
@@ -322,7 +322,7 @@ jobs:
 
     steps:
       - name: Load container artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: primer-downloader
           path: /tmp
@@ -359,7 +359,7 @@ jobs:
 
     steps:
       - name: Load container artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4.1.7
         with:
           name: primer-webhook
           path: /tmp
